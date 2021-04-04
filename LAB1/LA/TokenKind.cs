@@ -8,6 +8,7 @@
         Unknown,     // Неизвестный.
 
         SqrLeftParen,
-        SqrRightParen
+        SqrRightParen,
+        Comma
     };
 }

@@ -51,12 +51,12 @@ namespace LAB1
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.treeViewSyntaxTree = new System.Windows.Forms.TreeView();
+            this.richTextBoxOutput = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRecognizedTokens)).BeginInit();
             this.SuspendLayout();
             // 
@@ -73,14 +73,14 @@ namespace LAB1
             // 
             this.richTextBoxInput.Location = new System.Drawing.Point(22, 109);
             this.richTextBoxInput.Name = "richTextBoxInput";
-            this.richTextBoxInput.Size = new System.Drawing.Size(365, 256);
+            this.richTextBoxInput.Size = new System.Drawing.Size(365, 369);
             this.richTextBoxInput.TabIndex = 1;
             this.richTextBoxInput.Text = "abcd<!--abcd 101 -->101 011101110110 dbcdcd\n<!----ff\ndadaadad-->";
             this.richTextBoxInput.TextChanged += new System.EventHandler(this.richTextBoxInput_TextChanged);
             // 
             // buttonAnalyze
             // 
-            this.buttonAnalyze.Location = new System.Drawing.Point(142, 384);
+            this.buttonAnalyze.Location = new System.Drawing.Point(141, 484);
             this.buttonAnalyze.Name = "buttonAnalyze";
             this.buttonAnalyze.Size = new System.Drawing.Size(137, 34);
             this.buttonAnalyze.TabIndex = 2;
@@ -183,7 +183,7 @@ namespace LAB1
             // 
             // richTextBoxMessages
             // 
-            this.richTextBoxMessages.Location = new System.Drawing.Point(22, 445);
+            this.richTextBoxMessages.Location = new System.Drawing.Point(22, 541);
             this.richTextBoxMessages.Name = "richTextBoxMessages";
             this.richTextBoxMessages.Size = new System.Drawing.Size(779, 83);
             this.richTextBoxMessages.TabIndex = 10;
@@ -192,7 +192,7 @@ namespace LAB1
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(19, 429);
+            this.label6.Location = new System.Drawing.Point(19, 525);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(68, 13);
             this.label6.TabIndex = 11;
@@ -246,24 +246,15 @@ namespace LAB1
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(545, 22);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(57, 13);
+            this.label9.Size = new System.Drawing.Size(81, 13);
             this.label9.TabIndex = 15;
-            this.label9.Text = "S -> [S] | A";
+            this.label9.Text = "S -> [S] | [<2>B]";
             this.label9.Click += new System.EventHandler(this.label9_Click);
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(545, 35);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(60, 13);
-            this.label10.TabIndex = 16;
-            this.label10.Text = "A -> [<2>B]";
             // 
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(545, 48);
+            this.label11.Location = new System.Drawing.Point(545, 37);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(42, 13);
             this.label11.TabIndex = 17;
@@ -272,7 +263,7 @@ namespace LAB1
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(545, 61);
+            this.label12.Location = new System.Drawing.Point(545, 50);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(59, 13);
             this.label12.TabIndex = 18;
@@ -281,11 +272,11 @@ namespace LAB1
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(545, 74);
+            this.label13.Location = new System.Drawing.Point(545, 63);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(73, 13);
+            this.label13.Size = new System.Drawing.Size(170, 26);
             this.label13.TabIndex = 19;
-            this.label13.Text = "C\' -> <1>C\' | E";
+            this.label13.Text = "C\' -> ,<1>C\' | E\nВсе числа должны быть разные";
             // 
             // label14
             // 
@@ -301,20 +292,29 @@ namespace LAB1
             // 
             this.treeViewSyntaxTree.Location = new System.Drawing.Point(408, 109);
             this.treeViewSyntaxTree.Name = "treeViewSyntaxTree";
-            this.treeViewSyntaxTree.Size = new System.Drawing.Size(401, 333);
+            this.treeViewSyntaxTree.Size = new System.Drawing.Size(393, 173);
             this.treeViewSyntaxTree.TabIndex = 13;
+            this.treeViewSyntaxTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewSyntaxTree_AfterSelect);
+            // 
+            // richTextBoxOutput
+            // 
+            this.richTextBoxOutput.Location = new System.Drawing.Point(408, 288);
+            this.richTextBoxOutput.Name = "richTextBoxOutput";
+            this.richTextBoxOutput.Size = new System.Drawing.Size(393, 230);
+            this.richTextBoxOutput.TabIndex = 16;
+            this.richTextBoxOutput.Text = "";
+            this.richTextBoxOutput.WordWrap = false;
             // 
             // FormMain
             // 
             this.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(821, 541);
+            this.ClientSize = new System.Drawing.Size(821, 636);
             this.Controls.Add(this.label14);
             this.Controls.Add(this.label13);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.label11);
-            this.Controls.Add(this.label10);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
@@ -329,10 +329,12 @@ namespace LAB1
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.buttonAnalyze);
-            this.Controls.Add(this.richTextBoxInput);
             this.Controls.Add(this.treeViewSyntaxTree);
+            this.Controls.Add(this.richTextBoxInput);
+            this.Controls.Add(this.richTextBoxOutput);
             this.Name = "FormMain";
-            this.Text = "ЛР № 1, 2, 3 - Разработка лексического и синтаксического анализатор. Построение синтакс. дерева";
+            this.Text = "ЛР № 1, 2, 3, 4, 5 - Разработка лексического и синтаксического анализатор. Постро" +
+    "ение синтакс. дерева. Контекстный анализ. Генератор";
             this.Load += new System.EventHandler(this.FormMain_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRecognizedTokens)).EndInit();
             this.ResumeLayout(false);
@@ -362,13 +364,13 @@ namespace LAB1
         private Label label7;
         private Label label8;
         private Label label9;
-        private Label label10;
         private Label label11;
         private Label label12;
         private Label label13;
         private ComboBox comboBoxTypeAnalyzer;
         private Label label14;
         private System.Windows.Forms.TreeView treeViewSyntaxTree;
+        private System.Windows.Forms.RichTextBox richTextBoxOutput;
     }
 }
 

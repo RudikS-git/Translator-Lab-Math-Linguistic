@@ -6,7 +6,6 @@ using LAB1.Exceptions;
 
 namespace LAB1.SA
 {
-    // генерирует SynAnException или LexAnException.
     public class SyntaxAnalyzer
     {
         private LexicalAnalyzer lexAn;
@@ -21,29 +20,35 @@ namespace LAB1.SA
             throw new SyntaxAnalyzerException(msg, lexAn.CurLineIndex, lexAn.CurSymIndex);
         }
 
+        private void ContextError(string msg)
+        {
+            throw new ContextAnalyzerException(msg, lexAn.CurLineIndex, lexAn.CurSymIndex);
+        }
+
         private void S(out SyntaxTreeNode node)
         {
             node = new SyntaxTreeNode("S");
 
             if (lexAn.Token.Type == TokenKind.SqrLeftParen)
             {
+                node.AddSubNode(new SyntaxTreeNode(lexAn.Token));
                 lexAn.RecognizeNextToken();
                 
                 if (lexAn.Token.Type == TokenKind.SecondWord)
                 {
-                    SyntaxTreeNode nodeA = new SyntaxTreeNode("A");
-                    nodeA.AddSubNode(new SyntaxTreeNode("["));
-                    A(nodeA);
-                    node.AddSubNode(nodeA);
+                    node.AddSubNode(new SyntaxTreeNode(lexAn.Token));
+                    lexAn.RecognizeNextToken();
+
+                    B(out SyntaxTreeNode nodeB);
+                    node.AddSubNode(nodeB);
                 }
                 else
                 {
-                    node.AddSubNode(new SyntaxTreeNode("]"));
                     S(out SyntaxTreeNode nodeS);
                     node.AddSubNode(nodeS);
-                    Match(TokenKind.SqrRightParen);
-                    node.AddSubNode(new SyntaxTreeNode("]"));
                 }
+
+                node.AddSubNode(new SyntaxTreeNode(Match(TokenKind.SqrRightParen)));
             }
             else
             {
@@ -53,13 +58,13 @@ namespace LAB1.SA
 
         private void A(SyntaxTreeNode node)
         {
-            node.AddSubNode(new SyntaxTreeNode(lexAn.Token.Value));
+            node.AddSubNode(new SyntaxTreeNode(lexAn.Token));
             lexAn.RecognizeNextToken();
 
             B(out SyntaxTreeNode nodeB);
             node.AddSubNode(nodeB);
             Match(TokenKind.SqrRightParen);
-            node.AddSubNode(new SyntaxTreeNode("]"));
+            node.AddSubNode(new SyntaxTreeNode(lexAn.Token));
         }
 
         private void B(out SyntaxTreeNode node)
@@ -68,12 +73,12 @@ namespace LAB1.SA
             
             if (lexAn.Token.Type == TokenKind.SqrLeftParen)
             {
-                node.AddSubNode(new SyntaxTreeNode(lexAn.Token.Value));
+                node.AddSubNode(new SyntaxTreeNode(lexAn.Token));
                 lexAn.RecognizeNextToken();
                 C(out SyntaxTreeNode nodeC);
                 node.AddSubNode(nodeC);
                 Match(TokenKind.SqrRightParen);
-                node.AddSubNode(new SyntaxTreeNode("]"));
+                node.AddSubNode(new SyntaxTreeNode(lexAn.Token));
             }
             else
             {
@@ -84,12 +89,15 @@ namespace LAB1.SA
         private void C(out SyntaxTreeNode node)
         {
             node = new SyntaxTreeNode("C");
+            var numbers = new List<string>();
             
             if (lexAn.Token.Type == TokenKind.FirstWord)
             {
-                node.AddSubNode(new SyntaxTreeNode(lexAn.Token.Value));
+                numbers.Add(lexAn.Token.Value);
+                
+                node.AddSubNode(new SyntaxTreeNode(lexAn.Token));
                 lexAn.RecognizeNextToken();
-                _C(out SyntaxTreeNode node_C);
+                _C(out SyntaxTreeNode node_C, numbers);
                 node.AddSubNode(node_C);
             }
             else
@@ -98,16 +106,28 @@ namespace LAB1.SA
             }
         }
 
-        private void _C(out SyntaxTreeNode node) // C'
+        // numbers - наследуемый атрибут терминала C'
+        private void _C(out SyntaxTreeNode node, List<string> numbers) // C'
         {
             node = new SyntaxTreeNode("C'");
-            
-            if (lexAn.Token.Type == TokenKind.FirstWord)
+
+            if (lexAn.Token.Value == ",")
             {
-                node.AddSubNode(new SyntaxTreeNode(lexAn.Token.Value));
+                node.AddSubNode(new SyntaxTreeNode(lexAn.Token));
                 lexAn.RecognizeNextToken();
-                _C(out SyntaxTreeNode node_C);
-                node.AddSubNode(node_C);
+                if (lexAn.Token.Type == TokenKind.FirstWord)
+                {
+                    if (numbers.Exists(it => it == lexAn.Token.Value))
+                    {
+                        ContextError($"{lexAn.Token.Value} данное число уже встречалось");
+                    }
+                    
+                    numbers.Add(lexAn.Token.Value);
+                    node.AddSubNode(new SyntaxTreeNode(lexAn.Token));
+                    lexAn.RecognizeNextToken();
+                    _C(out SyntaxTreeNode node_C, numbers);
+                    node.AddSubNode(node_C);
+                }
             }
         }
 
@@ -126,16 +146,20 @@ namespace LAB1.SA
 
         // Проверить, что тип текущего распознанного токена совпадает с заданным.
         // Если совпадает, то распознать следующий токен, иначе синтаксическая ошибка.
-        private void Match(TokenKind tkn)
+        private Token Match(TokenKind tkn)
         {
             if (lexAn.Token.Type == tkn) // Сравниваем.
             {
+                var token = lexAn.Token;
                 lexAn.RecognizeNextToken(); // Распознаем следующий токен.
+                return token;
             }
             else
             {
                 SyntaxError("Ожидалось " + tkn.ToString()); // Обнаружена синтаксическая ошибка.
             }
+
+            return null;
         }
 
         // Проверить, что текущий распознанный токен совпадает с заданным (сравнение производится в нижнем регистре).

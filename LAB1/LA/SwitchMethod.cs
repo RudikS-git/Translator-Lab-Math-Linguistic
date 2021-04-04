@@ -18,16 +18,14 @@ namespace LAB1
         protected override void SkipComment()
         {
             StateComment currentState = StateComment.A;
-            char buffer;
 
             while (true)
             {
                 switch (currentState)
                 {
                     case StateComment.A:
-                        buffer = curSym;
-                        ReadNextSymbol();
-                        if (buffer == '<')
+
+                        if (curSym == '<')
                         {
                             currentState = StateComment.B;
                         }
@@ -36,12 +34,13 @@ namespace LAB1
                             LexicalError("Ожидалось <");
                         }
 
+                        ReadNextSymbol();
+
                         break;
 
                     case StateComment.B:
-                        buffer = curSym;
-                        ReadNextSymbol();
-                        if (buffer == '!')
+                        
+                        if (curSym == '!')
                         {
                             currentState = StateComment.C;
                         }
@@ -50,12 +49,13 @@ namespace LAB1
                             LexicalError("Ожидалось !");
                         }
 
+                        ReadNextSymbol();
+
                         break;
 
                     case StateComment.C:
-                        buffer = curSym;
-                        ReadNextSymbol();
-                        if (buffer == '-')
+
+                        if (curSym == '-')
                         {
                             currentState = StateComment.D;
                         }
@@ -64,12 +64,13 @@ namespace LAB1
                             LexicalError("Ожидалось -");
                         }
 
+                        ReadNextSymbol();
+
                         break;
 
                     case StateComment.D:
-                        buffer = curSym;
-                        ReadNextSymbol();
-                        if (buffer == '-')
+
+                        if (curSym == '-')
                         {
                             currentState = StateComment.E;
                         }
@@ -78,9 +79,12 @@ namespace LAB1
                             LexicalError("Ожидалось -");
                         }
 
+                        ReadNextSymbol();
+
                         break;
 
                     case StateComment.E:
+                        
                         if (curSym == '-')
                         {
                             ReadNextSymbol();
@@ -99,9 +103,8 @@ namespace LAB1
                         break;
 
                     case StateComment.F:
-                        buffer = curSym;
-                        ReadNextSymbol();
-                        if (buffer == '-')
+
+                        if (curSym == '-')
                         {
                             currentState = StateComment.G;
                         }
@@ -109,22 +112,24 @@ namespace LAB1
                         {
                             currentState = StateComment.E;
                         }
+
+                        ReadNextSymbol();
                         break;
 
                     case StateComment.G:
-                        buffer = curSym;
-                        ReadNextSymbol();
 
-                        if (buffer == '-')
+                        if (curSym == '-')
                         {
                             currentState = StateComment.G;
                             break;
                         }
-                        else if (buffer != '>')
+                        else if (curSym != '>')
                         {
                             currentState = StateComment.E;
                             break;
                         }
+
+                        ReadNextSymbol();
                         
                         return;
                 }

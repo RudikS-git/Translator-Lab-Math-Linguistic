@@ -9,39 +9,39 @@ namespace LAB1
     {
         public TableMethod(string [] inputLines) : base(inputLines) { }
 
-        private byte[][] CommentTable = new byte[8][] // A-0, B-1, C-2, D-3, E-4, F-5, G-6, Fin-7
+        private byte[,] CommentTable = new byte[,] // A-0, B-1, C-2, D-3, E-4, F-5, G-6, Fin-7
         {
             // 0-'<', 1-'!', 2-'-', 3-'>', 4-'с', 5-Fin
-            new byte[] { 1, 255, 255, 255, 255,   0 }, // A 0
-            new byte[] { 255, 2, 255, 255, 255,   0 }, // B 1
-            new byte[] { 255, 255, 3, 255, 255,   0 }, // C 2
-            new byte[] { 255, 255, 4, 255, 255,   0 }, // D 3
-            new byte[] { 255, 255, 5, 255, 4,     0 }, // E 4
-            new byte[] { 255, 255, 6, 255, 4,     0 }, // F 5
-            new byte[] { 255, 255, 6, 7, 4,   0 }, // G 6
-            new byte[] { 255, 255, 255, 255, 255, 1 }  // Fin 7
+            { 1, 255, 255, 255, 255,   0 }, // A 0
+            { 255, 2, 255, 255, 255,   0 }, // B 1
+            { 255, 255, 3, 255, 255,   0 }, // C 2
+            { 255, 255, 4, 255, 255,   0 }, // D 3
+            { 255, 255, 5, 255, 4,     0 }, // E 4
+            { 255, 255, 6, 255, 4,     0 }, // F 5
+            { 255, 255, 6, 7, 4,   0 }, // G 6
+            { 255, 255, 255, 255, 255, 1 }  // Fin 7
         };
 
-        private byte[][] FirstWordTable = new byte[9][] // {A}-0, {B}-1, {C}-2, {E}-3, {A, D}-4, {F}-5, {G, Fin}-6, {H}-7, {I}-8
+        private byte[,] FirstWordTable = new byte[,] // {A}-0, {B}-1, {C}-2, {E}-3, {A, D}-4, {F}-5, {G, Fin}-6, {H}-7, {I}-8
         {
             // 0-0, 1-1, Fin-2
-            new byte[] { 1,   3, 0 }, // {A}0
-            new byte[] { 255, 2, 0 }, // {B}1
-            new byte[] { 255, 4, 0 }, // {C}2
-            new byte[] { 5, 255, 0 }, // {E}3
-            new byte[] { 1,   3, 0 }, // {A, D}4
-            new byte[] { 255, 6, 0 }, // {F}5
-            new byte[] { 255, 7, 0 }, // {G, Fin}6
-            new byte[] { 255, 8, 1 }, // {H}7
-            new byte[] { 6, 255, 0 }  // {I}8
+            { 1,   3, 0 }, // {A}0
+            { 255, 2, 0 }, // {B}1
+            { 255, 4, 0 }, // {C}2
+            { 5, 255, 0 }, // {E}3
+            { 1,   3, 0 }, // {A, D}4
+            { 255, 6, 0 }, // {F}5
+            { 255, 7, 0 }, // {G, Fin}6
+            { 255, 8, 1 }, // {H}7
+            { 6, 255, 0 }  // {I}8
         };
 
-        private byte[][] SecondWordTable = new byte[3][] // {A}-0, {B, Fin}-1, {C, Fin}-2
+        private byte[,] SecondWordTable = new byte[,] // {A}-0, {B, Fin}-1, {C, Fin}-2
         {
             // 0-'a', 1-'b', 2-'c', 3-'d', 4-Fin
-            new byte[] { 1,   1, 1, 2, 0 }, // {A}
-            new byte[] { 1,   1, 1, 1, 1 }, // {B, Fin}
-            new byte[] { 255, 2, 2, 2, 1 }, // {C, Fin}
+            { 1,   1, 1, 2, 0 }, // {A}
+            { 1,   1, 1, 1, 1 }, // {B, Fin}
+            { 255, 2, 2, 2, 1 }, // {C, Fin}
         };
 
         protected override void SkipComment()
@@ -73,7 +73,7 @@ namespace LAB1
             {
                 int currentColumn = GetColumnForSymbol(curSym);
 
-                currentState = CommentTable[currentState][currentColumn];
+                currentState = CommentTable[currentState,currentColumn];
                 
                 if (currentState == 255)
                 {
@@ -122,7 +122,7 @@ namespace LAB1
                     LexicalError($"Ожидалось 0, 1");
                 }
 
-                currentState = FirstWordTable[currentState][currentColumn];
+                currentState = FirstWordTable[currentState,currentColumn];
 
                 if (currentState == 255)
                 {
@@ -175,7 +175,7 @@ namespace LAB1
 
                 int currentColumn = GetColumnForSymbol(curSym);
 
-                currentState = SecondWordTable[currentState][currentColumn];
+                currentState = SecondWordTable[currentState,currentColumn];
 
                 if (currentState == 255)
                 {

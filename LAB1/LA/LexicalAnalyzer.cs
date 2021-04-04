@@ -125,6 +125,7 @@ namespace LAB1
                 // резервные символы для кс
                 case '[':
                 case ']':
+                case ',':
                     curSymKind = SymbolKind.Reserved;
                     return;
 
@@ -188,6 +189,10 @@ namespace LAB1
 
                 case ']':
                     Token.Type = TokenKind.SqrRightParen;
+                    break;
+
+                case ',':
+                    Token.Type = TokenKind.Comma;
                     break;
 
                 default:

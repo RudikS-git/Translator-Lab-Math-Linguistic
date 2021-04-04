@@ -7,10 +7,19 @@ namespace LAB1.SA
     {
         private string name;
         private List<SyntaxTreeNode> subNodes;
+        private Token token;
 
         public SyntaxTreeNode(string name)
         {
             this.name = name;
+            this.token = null;
+            subNodes = new List<SyntaxTreeNode>();
+        }
+
+        public SyntaxTreeNode(Token token)
+        {
+            this.token = token;
+            this.name = token.Value;
             subNodes = new List<SyntaxTreeNode>();
         }
 
@@ -22,6 +31,11 @@ namespace LAB1.SA
         public string Name
         {
             get { return name; }
+        }
+
+        public Token Token
+        {
+            get { return token; }
         }
 
         public List<SyntaxTreeNode> SubNodes

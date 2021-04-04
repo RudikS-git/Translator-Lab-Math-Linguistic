@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using LAB1.Exceptions;
+using LAB1.Output;
 using LAB1.SA;
 
 namespace LAB1
@@ -55,6 +57,11 @@ namespace LAB1
                     syntaxAnalyzer.ParseText(out SyntaxTreeNode treeRoot);
                     richTextBoxMessages.AppendText("Текст правильный");
                     VisualizeSyntaxTree(treeRoot); // Визуализируем синтаксическое дерево в компоненте treeViewSyntaxTree.
+                    
+                    Generator generator = new Generator(treeRoot);
+                    generator.GenerateStructuredText();
+
+                    ShowOutputText(generator.OutputText);
                 }
                 else
                 {
@@ -115,11 +122,11 @@ namespace LAB1
 
                 label8.Visible = false;
                 label9.Visible = false;
-                label10.Visible = false;
                 label11.Visible = false;
                 label12.Visible = false;
                 label13.Visible = false;
                 treeViewSyntaxTree.Visible = false;
+                richTextBoxOutput.Visible = false;
 
                 richTextBoxInput.Text = @"abcd <!--abcd 101--> 101 011101110110 dbcdcd
 <!----ff
@@ -132,11 +139,10 @@ dadaadad--> ";
 
                 label8.Visible = true;
                 label9.Visible = true;
-                label10.Visible = true;
                 label11.Visible = true;
                 label12.Visible = true;
                 label13.Visible = true;
-
+                richTextBoxOutput.Visible = true;
                 treeViewSyntaxTree.Visible = true;
 
                 richTextBoxInput.Text = @"<!-- 
@@ -148,11 +154,11 @@ dadaadad--> ";
 <!-- пример html комментария -->                              
     dbcddcddcdcddcddddcccccd
     [
-         011011011011101
+         011011011011101,
 <!-- пример html комментария -->      
-         101
-         011101110
-         101110
+         101,
+         011101110,
+         101110,
          011101       
     ] 
 ]
@@ -188,6 +194,16 @@ dadaadad--> ";
             }
         }
 
+        private void ShowOutputText(List<string> outputText)
+        {
+            richTextBoxOutput.Clear(); // Очищаем поле.
+
+            for (int i = 0; i < outputText.Count(); i++) // Цикл по строкам выходного текста.
+            {
+                richTextBoxOutput.AppendText(outputText[i] + "\n"); // Добавляем очередную строку в поле.
+            }
+        }
+
         private void FormMain_Load(object sender, EventArgs e)
         {
 
@@ -209,6 +225,11 @@ dadaadad--> ";
         }
 
         private void label14_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void treeViewSyntaxTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
 
         }
